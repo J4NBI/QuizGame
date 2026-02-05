@@ -1,4 +1,4 @@
-dimport { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import Header from "./components/Header.jsx";
 import Questions from "./components/Questions.jsx";
 
@@ -41,7 +41,6 @@ function App() {
   }
 
   function handleAnswerClick(value) {
-    console.log(value)
     setAnswers((prev) => [...prev, value]);
   }
 

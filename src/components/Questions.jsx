@@ -9,6 +9,12 @@ export default function Questions({
 }) {
   if (!isGame || !quizQuestions) return null;
 
+  let isCorrectAnswer =
+    answers.length &&
+    quizQuestions.results[answers.length - 1].correct_answer ===
+      answers[answers.length - 1];
+  console.log(isCorrectAnswer);
+
   return (
     <main className="flex items-center justify-center mt-12">
       <div className="bg-[#0E65A2] shadow-2xl rounded-md w-[90%] pt-14 px-12">
@@ -32,7 +38,12 @@ export default function Questions({
             {givenAnswers.map((givenAnswer, index) => (
               <li
                 key={index}
-                className="bg-blue-400 my-4 p-4 rounded-md shadow-md hover:bg-[#1ac6ac] transition duration-200"
+                className={
+                  answers[answers.length - 1] ===
+                  quizQuestions.results[answers.length - 1].correct_answer
+                    ? "bg-green-400 my-4 p-4 rounded-md shadow-md hover:bg-[#1ac6ac] transition duration-200"
+                    : "bg-blue-400 my-4 p-4 rounded-md shadow-md hover:bg-[#1ac6ac] transition duration-200"
+                }
               >
                 <button
                   onClick={(e) => handleAnswerClick(e.target.value)}
