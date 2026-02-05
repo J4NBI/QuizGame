@@ -8,6 +8,7 @@ function App() {
   const [givenAnswers, setGivenAnswers] = useState([]);
   const [isGame, setIsGame] = useState(false);
   const [submittedEntries, setSubmittedEntries] = useState({});
+  const [isCorrect, setIsCorrect] = useState(null);
 
   useEffect(() => {
     if (!isGame) return;
@@ -41,7 +42,15 @@ function App() {
   }
 
   function handleAnswerClick(value) {
-    setAnswers((prev) => [...prev, value]);
+    if (value === quizQuestions.results[answers.length].correct_answer) {
+      setIsCorrect(true);
+    } else {
+      setIsCorrect(false);
+    }
+    setTimeout(() => {
+      setAnswers((prev) => [...prev, value]);
+      setIsCorrect(null);
+    }, 3000);
   }
 
   function onSubmit(object) {
@@ -58,6 +67,7 @@ function App() {
         answers={answers}
         givenAnswers={givenAnswers}
         handleAnswerClick={handleAnswerClick}
+        isCorrect={isCorrect}
       />
     </div>
   );

@@ -6,8 +6,18 @@ export default function Questions({
   answers,
   givenAnswers,
   handleAnswerClick,
+  isCorrect,
 }) {
   if (!isGame || !quizQuestions) return null;
+
+  let styleButton = "bg-blue-400";
+  if (isCorrect === null) {
+    styleButton = "bg-blue-400";
+  } else if (isCorrect === true) {
+    styleButton = "bg-green-300 scale-105";
+  } else {
+    styleButton = "bg-red-300 scale-105";
+  }
 
   return (
     <main className="flex items-center justify-center mt-12">
@@ -32,7 +42,11 @@ export default function Questions({
             {givenAnswers.map((givenAnswer, index) => (
               <li
                 key={index}
-                className="bg-blue-400 my-4 p-4 rounded-md shadow-md hover:bg-[#1ac6ac] transition duration-200"
+                className={
+                  givenAnswer === answers[answers.length - 1]
+                    ? `${styleButton} my-4 p-4 rounded-md shadow-md hover:bg-[#1ac6ac] transition duration-200`
+                    : `bg-blue-400 my-4 p-4 rounded-md shadow-md hover:bg-[#1ac6ac] transition duration-200`
+                }
               >
                 <button
                   onClick={(e) => handleAnswerClick(e.target.value)}
