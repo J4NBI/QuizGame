@@ -14,17 +14,20 @@ const Header = ({ onSubmit }) => {
         className="flex items-center justify-between w-full h-full"
         action={handleSubmit}
       >
-        <label htmlFor="number">Questions</label>
-        <input
-          className="w-[100px] bg-blue-400 h-[38px] p-2 rounded-md"
-          type="number"
-          min="1"
-          max="50"
-          placeholder="Max 50"
-          id="number"
-          name="number"
-          required
-        />
+        <div>
+          <label htmlFor="number">Questions</label>
+          <input
+            className=" ml-4 w-[100px] bg-blue-400 h-[38px] p-2 rounded-md"
+            type="number"
+            min="1"
+            max="50"
+            placeholder="Max 50"
+            id="number"
+            name="number"
+            required
+          />
+        </div>
+
         <select className="bg-blue-400 p-2 rounded-md" name="difficulty">
           <option value="easy">easy</option>
           <option value="medium">medium</option>

@@ -1,4 +1,5 @@
 import { decodeHtml } from "../utils/htmlHelper.js";
+import { useState } from "react";
 
 export default function Questions({
   isGame,
@@ -8,6 +9,18 @@ export default function Questions({
   handleAnswerClick,
 }) {
   if (!isGame || !quizQuestions) return null;
+  const [clickedAnswer, setClickedAnswer] = useState(true);
+  console.log(clickedAnswer);
+
+  let isCorrectAnswer =
+    answers.length &&
+    quizQuestions.results[answers.length - 1].correct_answer ===
+      answers[answers.length - 1];
+
+  const styleButtonStandart =
+    "bg-blue-400 my-4 p-4 rounded-md shadow-md hover:bg-[#1ac6ac] transition duration-200";
+  const styledButtonCorrectAnswer =
+    "bg-green-300 my-4 p-4 rounded-md shadow-md hover:bg-[#1ac6ac] transition duration-200";
 
   return (
     <main className="flex items-center justify-center mt-12">
@@ -32,7 +45,11 @@ export default function Questions({
             {givenAnswers.map((givenAnswer, index) => (
               <li
                 key={index}
-                className="bg-blue-400 my-4 p-4 rounded-md shadow-md hover:bg-[#1ac6ac] transition duration-200"
+                className={
+                  givenAnswer === clickedAnswer
+                    ? styledButtonCorrectAnswer
+                    : styleButtonStandart
+                }
               >
                 <button
                   onClick={(e) => handleAnswerClick(e.target.value)}
