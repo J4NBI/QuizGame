@@ -41,7 +41,10 @@ function App() {
   }
 
   function handleAnswerClick(value) {
-    setAnswers((prev) => [...prev, value]);
+    setClickedAnswer((prev) => value);
+    setTimeout(() => {
+      setAnswers((prev) => [...prev, value]);
+    }, 3000);
   }
 
   function onSubmit(object) {
