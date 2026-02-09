@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import Header from "./components/Header.jsx";
 import Questions from "./components/Questions.jsx";
+import EndChart from "./components/EndChart.jsx";
 
 function App() {
   const [quizQuestions, setQuizQuestions] = useState(null);
@@ -8,6 +9,8 @@ function App() {
   const [givenAnswers, setGivenAnswers] = useState([]);
   const [isGame, setIsGame] = useState(false);
   const [submittedEntries, setSubmittedEntries] = useState({});
+  const [finishedQuestions, setFinishedQuestions] = useState(false);
+
 
   useEffect(() => {
     if (!isGame) return;
@@ -15,36 +18,27 @@ function App() {
     fetch(
       `https://opentdb.com/api.php?amount=${submittedEntries.number}&category=${submittedEntries.category}&difficulty=${submittedEntries.difficulty}&type=multiple`
     )
-      .then((response) => {
-        if (!response.ok) {
-          throw new Error("Network response was not ok");
-        }
-        return response.json();
-      })
+      .then((response) => response.json())
       .then((json) => setQuizQuestions(json))
-      .catch((err) => {
-        console.log(err);
-      });
+      .catch((err) => console.log(err));
   }, [isGame, submittedEntries]);
 
   useEffect(() => {
     if (!quizQuestions) return;
+    if (answers.length >= quizQuestions.results.length) return;
 
-    setGivenAnswers([
-      ...quizQuestions.results[answers.length].incorrect_answers,
-      quizQuestions.results[answers.length].correct_answer,
-    ]);
+    const currentQuestion = quizQuestions.results[answers.length];
+
+    const shuffledAnswers = [
+      ...currentQuestion.incorrect_answers,
+      currentQuestion.correct_answer,
+    ].sort(() => Math.random() - 0.5);
+
+    setGivenAnswers(shuffledAnswers);
   }, [quizQuestions, answers.length]);
 
-  if (givenAnswers) {
-    givenAnswers.sort(() => Math.random() - 0.5);
-  }
-
   function handleAnswerClick(value) {
-    setClickedAnswer((prev) => value);
-    setTimeout(() => {
-      setAnswers((prev) => [...prev, value]);
-    }, 3000);
+    setAnswers((prev) => [...prev, value]);
   }
 
   function onSubmit(object) {
@@ -52,16 +46,39 @@ function App() {
     setIsGame(true);
   }
 
+  function handleNewGame(){
+    setIsGame(false);
+    setAnswers([]);
+    setQuizQuestions(null);
+    setFinishedQuestions(false)
+  }
+
+  useEffect(() => {
+    if (!quizQuestions) return;
+  
+    if (answers.length === quizQuestions.results.length) {
+      setFinishedQuestions(true);
+    }
+  }, [answers.length, quizQuestions]);
+  
+
+    
+  
+
   return (
     <div className="bg-gradient-to-b from-[#1ac6ac] to-blue-500 min-h-screen h-full p-8">
       <Header onSubmit={onSubmit} />
-      <Questions
-        isGame={isGame}
-        quizQuestions={quizQuestions}
-        answers={answers}
-        givenAnswers={givenAnswers}
-        handleAnswerClick={handleAnswerClick}
-      />
+      {!finishedQuestions ? (
+        <Questions
+          isGame={isGame}
+          quizQuestions={quizQuestions}
+          answers={answers}
+          givenAnswers={givenAnswers}
+          handleAnswerClick={handleAnswerClick}
+        />
+      ) : (
+        <EndChart answers={answers} quizQuestions={quizQuestions} onClick={handleNewGame} />
+      )}
     </div>
   );
 }
