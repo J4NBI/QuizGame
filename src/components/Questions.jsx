@@ -36,8 +36,8 @@ export default function Questions({
 
   return (
     <main className="flex items-center justify-center mt-12">
-      <div className="bg-[#0E65A2] shadow-2xl rounded-md w-[90%] pt-14 px-12">
-        <div className="flex justify-between bg-blue-300 px-12 py-4 rounded-md">
+      <div className="bg-[#0E65A2] shadow-2xl rounded-md md:w-[90%] w-[100%] pt-14 px-12">
+        <div className="flex md:flex-row flex-col items-center justify-between bg-blue-300 px-12 py-4 rounded-md">
           <h2 className="font-bold">
             QUESTION {answers.length + 1} / {quizQuestions.results.length}
           </h2>

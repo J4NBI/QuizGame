@@ -11,16 +11,33 @@ function App() {
   const [submittedEntries, setSubmittedEntries] = useState({});
   const [finishedQuestions, setFinishedQuestions] = useState(false);
 
-
   useEffect(() => {
     if (!isGame) return;
 
-    fetch(
-      `https://opentdb.com/api.php?amount=${submittedEntries.number}&category=${submittedEntries.category}&difficulty=${submittedEntries.difficulty}&type=multiple`
-    )
-      .then((response) => response.json())
-      .then((json) => setQuizQuestions(json))
-      .catch((err) => console.log(err));
+    async function fetchQuestions() {
+      try {
+        const response = await fetch(
+          `https://opentdb.com/api.php?amount=${submittedEntries.number}&category=${submittedEntries.category}&difficulty=${submittedEntries.difficulty}&type=multiple`
+        );
+
+        if (!response.ok) {
+          throw new Error("Fehler beim Laden der Fragen");
+        }
+
+        const data = await response.json();
+
+        if (!data.results || data.results.length === 0) {
+          throw new Error("Keine Fragen gefunden");
+        }
+
+        setQuizQuestions(data);
+      } catch (err) {
+        console.error(err);
+        alert("Fehler: " + err.message); // oder setze einen Error-Status
+      }
+    }
+
+    fetchQuestions();
   }, [isGame, submittedEntries]);
 
   useEffect(() => {
@@ -46,28 +63,25 @@ function App() {
     setIsGame(true);
   }
 
-  function handleNewGame(){
+  function handleNewGame() {
     setIsGame(false);
     setAnswers([]);
     setQuizQuestions(null);
-    setFinishedQuestions(false)
+    setFinishedQuestions(false);
   }
 
   useEffect(() => {
     if (!quizQuestions) return;
-  
+
     if (answers.length === quizQuestions.results.length) {
       setFinishedQuestions(true);
     }
   }, [answers.length, quizQuestions]);
-  
-
-    
-  
 
   return (
-    <div className="bg-gradient-to-b from-[#1ac6ac] to-blue-500 min-h-screen h-full p-8">
-      <Header onSubmit={onSubmit} />
+    <div className="bg-gradient-to-b from-[#1ac6ac] to-blue-500 min-h-screen h-full md:p-8 p-4">
+      <Header onSubmit={onSubmit} finishedQuestions={finishedQuestions} />
+
       {!finishedQuestions ? (
         <Questions
           isGame={isGame}
@@ -77,7 +91,11 @@ function App() {
           handleAnswerClick={handleAnswerClick}
         />
       ) : (
-        <EndChart answers={answers} quizQuestions={quizQuestions} onClick={handleNewGame} />
+        <EndChart
+          answers={answers}
+          quizQuestions={quizQuestions}
+          onClick={handleNewGame}
+        />
       )}
     </div>
   );
