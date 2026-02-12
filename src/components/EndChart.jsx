@@ -48,7 +48,9 @@ export default function EndChart({ answers, quizQuestions, ...props }) {
                 <h3 className="text-[#24cebc] m-4 text-xl">
                   {index + 1}. {decodeHtml(question.question)}{" "}
                 </h3>
-                <p className="text-[#ffa51a] mb-4">{question.correct_answer}</p>
+                <p className="text-[#ffa51a] mb-4">
+                  {decodeHtml(question.correct_answer)}
+                </p>
                 <p className="flex flex-col items-center text-[#24cebc]">
                   YOUR ANSWER:{" "}
                   <span
@@ -58,7 +60,7 @@ export default function EndChart({ answers, quizQuestions, ...props }) {
                         : "text-red-700 pt-2"
                     }
                   >
-                    {answers[index]}
+                    {decodeHtml(answers[index])}
                   </span>{" "}
                 </p>
               </div>
