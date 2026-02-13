@@ -17,7 +17,7 @@ function App() {
     async function fetchQuestions() {
       try {
         const response = await fetch(
-          `https://opentdb.com/api.php?amount=${submittedEntries.number}&category=${submittedEntries.category}&difficulty=${submittedEntries.difficulty}&type=multiple`
+          `https://opentdb.com/api.php?amount=${submittedEntries.number}&category=${submittedEntries.category}&difficulty=${submittedEntries.difficulty}&type=multiple`,
         );
 
         if (!response.ok) {
@@ -33,7 +33,7 @@ function App() {
         setQuizQuestions(data);
       } catch (err) {
         console.error(err);
-        alert("Fehler: " + err.message); // oder setze einen Error-Status
+        alert("Fehler: " + err.message);
       }
     }
 

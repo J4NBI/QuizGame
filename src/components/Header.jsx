@@ -1,64 +1,117 @@
-import React from "react";
+import React, { useState } from "react";
 import Logo from "../assets/QuizGameLogo.png";
+import Box from "@mui/material/Box";
+import NumberField from "./NumberField";
+import InputLabel from "@mui/material/InputLabel";
+import MenuItem from "@mui/material/MenuItem";
+import FormControl from "@mui/material/FormControl";
+import Select from "@mui/material/Select";
+import Button from "@mui/material/Button";
 
 const Header = ({ onSubmit, finishedQuestions }) => {
-  function handleSubmit(formData) {
-    let submitObject = Object.fromEntries(formData);
+  const [difficulty, setDifficulty] = useState("");
+  const [category, setCategory] = useState("");
+
+  function handleSubmit(e) {
+    e.preventDefault();
+    const formData = new FormData(e.target);
+    const submitObject = Object.fromEntries(formData);
     onSubmit(submitObject);
   }
 
+  const menuPaperSx = { bgcolor: "rgba(96,165,250,0.5)", color: "#ffffff" };
+
   return (
-    <div className="flex md:flex-row flex-col justify-center items-center gap-4 bg-blue-200 px-8 py-4 rounded-md">
+    <div className="max-w-[900px] m-auto flex flex-col md:flex-row items-center justify-center bg-blue-200/50 px-8 py-8 rounded-md shadow-md">
       <img
-        className="md:w-[10%] w-[20%] rounded-[100%]"
+        className="md:w-[10%] w-[25%] rounded-full mb-8 md:mb-0 md:mr-6 self-center"
         src={Logo}
         alt="Quizgame Logo"
       />
-      <form
-        className="md:px-8 flex md:flex-row flex-col gap-4 md:items-center justify-between w-full h-full"
-        action={!finishedQuestions && handleSubmit}
-      >
-        <div className="flex flex-col items-center md:flex-row">
-          <input
-            className="w-full md:w-[180px] bg-blue-400 h-[38px] rounded-md placeholder:text-white/50 p-2"
-            type="number"
-            min="1"
-            max="50"
-            placeholder="Questions - Max. 50"
-            id="number"
-            name="number"
-            required
+      <Box className="ml-4 w-full" component="form" onSubmit={handleSubmit}>
+        <div className="flex flex-col md:flex-row items-center justify-between gap-6 md:gap-4 w-full">
+          <div className="h-[90px] border-2 border-[#1ac6ac] py-2 px-4 rounded-md w-full flex-2 bg-blue-400/50">
+            <NumberField
+              label="Number of Questions"
+              min={1}
+              max={50}
+              name="number"
+              required
+            />
+          </div>
+
+          <FormControl
+            size="medium"
+            className="h-[90px] border-2 border-[#1ac6ac] py-2 px-4 rounded-md w-full flex-[40%] bg-blue-400/50"
+          >
+            <InputLabel id="difficulty-label">Difficulty</InputLabel>
+            <Select
+              labelId="difficulty-label"
+              id="difficulty-select"
+              name="difficulty"
+              value={difficulty}
+              onChange={(e) => setDifficulty(e.target.value)}
+              MenuProps={{ PaperProps: { sx: menuPaperSx } }}
+              label="Difficulty"
+              required
+            >
+              <MenuItem sx={{ color: "#000000" }} value="">
+                Select difficulty
+              </MenuItem>
+              <MenuItem sx={{ color: "#000000" }} value="easy">
+                easy
+              </MenuItem>
+              <MenuItem sx={{ color: "#000000" }} value="medium">
+                medium
+              </MenuItem>
+              <MenuItem sx={{ color: "#000000" }} value="hard">
+                hard
+              </MenuItem>
+            </Select>
+          </FormControl>
+
+          <FormControl
+            size="medium"
+            className="h-[90px] border-2 border-[#1ac6ac] py-2 px-4 rounded-md w-full flex-[40%] bg-blue-400/50"
+          >
+            <InputLabel id="genre-label">Category</InputLabel>
+            <Select
+              labelId="genre-label"
+              id="genre-select"
+              name="category"
+              value={category}
+              onChange={(e) => setCategory(e.target.value)}
+              MenuProps={{ PaperProps: { sx: menuPaperSx } }}
+              label="Category"
+              required
+            >
+              <MenuItem sx={{ color: "#000000" }} value="">
+                Select Category
+              </MenuItem>
+              <MenuItem sx={{ color: "#000000" }} value="10">
+                Books
+              </MenuItem>
+              <MenuItem sx={{ color: "#000000" }} value="11">
+                Film
+              </MenuItem>
+              <MenuItem sx={{ color: "#000000" }} value="12">
+                Music
+              </MenuItem>
+              <MenuItem sx={{ color: "#000000" }} value="26">
+                Celebrities
+              </MenuItem>
+            </Select>
+          </FormControl>
+
+          <Button
+            type="submit"
+            className="border-2 border-blue-400 py-2 px-4 hover:border-[#1ac6ac] hover:bg-blue-400 rounded-md"
             disabled={finishedQuestions}
-          />
+          >
+            Start
+          </Button>
         </div>
-
-        <select
-          className="bg-blue-400 p-2 rounded-md"
-          name="difficulty"
-          disabled={finishedQuestions}
-        >
-          <option value="easy">easy</option>
-          <option value="medium">medium</option>
-          <option value="hard">hard</option>
-        </select>
-
-        <select
-          className="bg-blue-400 p-2 rounded-md"
-          name="category"
-          disabled={finishedQuestions}
-        >
-          <option value="10">Books</option>
-          <option value="11">Film</option>
-          <option value="12">Music</option>
-          <option value="26">Celebreties</option>
-        </select>
-        <button
-          className="border-2 border-blue-400 py-2 px-4 hover:border-white hover:bg-blue-400 rounded-md"
-          disabled={finishedQuestions}
-        >
-          Start
-        </button>
-      </form>
+      </Box>
     </div>
   );
 };
